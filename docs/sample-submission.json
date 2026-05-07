@@ -1,0 +1,15 @@
+{
+  "submissionId": "sub-001",
+  "formId": "adverse-event-form",
+  "submittedAt": "2026-04-28T14:30:00Z",
+  "data": {
+    "subject_id": "CA-1234",
+    "visit_date": "2026-04-28",
+    "adverse_event_occurred": "Yes",
+    "event_description": "Patient reported mild headache beginning 2 hours after treatment administration.",
+    "severity_score": "3",
+    "event_date": "2026-04-28",
+    "height_cm": "175",
+    "weight_kg": "82"
+  }
+}

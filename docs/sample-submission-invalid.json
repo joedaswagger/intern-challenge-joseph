@@ -1,0 +1,15 @@
+{
+  "submissionId": "sub-002",
+  "formId": "adverse-event-form",
+  "submittedAt": "2026-04-29T09:15:00Z",
+  "data": {
+    "subject_id": "INVALID",
+    "visit_date": "not-a-date",
+    "adverse_event_occurred": "Yes",
+    "event_description": "Short",
+    "severity_score": "7",
+    "event_date": "2026-04-30",
+    "height_cm": "175",
+    "weight_kg": "82"
+  }
+}

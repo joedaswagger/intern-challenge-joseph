@@ -1,0 +1,110 @@
+{
+  "formId": "adverse-event-form",
+  "name": "Adverse Event Report",
+  "version": "1.0",
+  "fields": [
+    {
+      "id": "subject_id",
+      "label": "Subject ID",
+      "type": "Text",
+      "required": true,
+      "dependsOn": [],
+      "constraints": {
+        "pattern": "^[A-Z]{2}-\\d{4}$"
+      }
+    },
+    {
+      "id": "visit_date",
+      "label": "Visit Date",
+      "type": "Date",
+      "required": true,
+      "dependsOn": ["subject_id"]
+    },
+    {
+      "id": "adverse_event_occurred",
+      "label": "Did an Adverse Event Occur?",
+      "type": "Choice",
+      "required": true,
+      "dependsOn": ["visit_date"],
+      "constraints": {
+        "allowedValues": ["Yes", "No"]
+      }
+    },
+    {
+      "id": "event_description",
+      "label": "Description of Adverse Event",
+      "type": "Text",
+      "required": false,
+      "dependsOn": ["adverse_event_occurred"],
+      "conditionalRequirement": {
+        "fieldId": "adverse_event_occurred",
+        "operator": "equals",
+        "value": "Yes"
+      },
+      "constraints": {
+        "minLength": 10,
+        "maxLength": 500
+      }
+    },
+    {
+      "id": "severity_score",
+      "label": "Severity Score (1-5)",
+      "type": "Number",
+      "required": false,
+      "dependsOn": ["adverse_event_occurred"],
+      "conditionalRequirement": {
+        "fieldId": "adverse_event_occurred",
+        "operator": "equals",
+        "value": "Yes"
+      },
+      "constraints": {
+        "min": 1,
+        "max": 5
+      }
+    },
+    {
+      "id": "event_date",
+      "label": "Date of Adverse Event",
+      "type": "Date",
+      "required": false,
+      "dependsOn": ["adverse_event_occurred", "visit_date"],
+      "conditionalRequirement": {
+        "fieldId": "adverse_event_occurred",
+        "operator": "equals",
+        "value": "Yes"
+      }
+    },
+    {
+      "id": "height_cm",
+      "label": "Height (cm)",
+      "type": "Number",
+      "required": true,
+      "dependsOn": ["subject_id"],
+      "constraints": {
+        "min": 50,
+        "max": 250
+      }
+    },
+    {
+      "id": "weight_kg",
+      "label": "Weight (kg)",
+      "type": "Number",
+      "required": true,
+      "dependsOn": ["subject_id"],
+      "constraints": {
+        "min": 20,
+        "max": 300
+      }
+    },
+    {
+      "id": "bmi",
+      "label": "Body Mass Index",
+      "type": "Calculated",
+      "required": false,
+      "dependsOn": ["height_cm", "weight_kg"],
+      "constraints": {
+        "formula": "weight_kg / ((height_cm / 100) * (height_cm / 100))"
+      }
+    }
+  ]
+}

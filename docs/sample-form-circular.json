@@ -1,0 +1,28 @@
+{
+  "formId": "circular-dependency-example",
+  "name": "Circular Dependency Test",
+  "version": "1.0",
+  "fields": [
+    {
+      "id": "field_a",
+      "label": "Field A",
+      "type": "Text",
+      "required": true,
+      "dependsOn": ["field_c"]
+    },
+    {
+      "id": "field_b",
+      "label": "Field B",
+      "type": "Text",
+      "required": true,
+      "dependsOn": ["field_a"]
+    },
+    {
+      "id": "field_c",
+      "label": "Field C",
+      "type": "Text",
+      "required": true,
+      "dependsOn": ["field_b"]
+    }
+  ]
+}

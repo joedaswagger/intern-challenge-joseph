@@ -1,0 +1,73 @@
+{
+  "submissionId": "sub-002",
+  "formId": "adverse-event-form",
+  "isValid": false,
+  "executionOrder": [
+    "subject_id",
+    "visit_date",
+    "height_cm",
+    "weight_kg",
+    "adverse_event_occurred",
+    "event_description",
+    "severity_score",
+    "event_date",
+    "bmi"
+  ],
+  "results": [
+    {
+      "fieldId": "subject_id",
+      "severity": "Error",
+      "message": "Value 'INVALID' does not match required pattern '^[A-Z]{2}-\\d{4}$'",
+      "isValid": false
+    },
+    {
+      "fieldId": "visit_date",
+      "severity": "Error",
+      "message": "Value 'not-a-date' is not a valid date",
+      "isValid": false
+    },
+    {
+      "fieldId": "height_cm",
+      "severity": "Info",
+      "message": "Valid",
+      "isValid": true
+    },
+    {
+      "fieldId": "weight_kg",
+      "severity": "Info",
+      "message": "Valid",
+      "isValid": true
+    },
+    {
+      "fieldId": "adverse_event_occurred",
+      "severity": "Info",
+      "message": "Valid",
+      "isValid": true
+    },
+    {
+      "fieldId": "event_description",
+      "severity": "Error",
+      "message": "Value length (5) is less than minimum length (10)",
+      "isValid": false
+    },
+    {
+      "fieldId": "severity_score",
+      "severity": "Error",
+      "message": "Value 7 exceeds maximum allowed value of 5",
+      "isValid": false
+    },
+    {
+      "fieldId": "event_date",
+      "severity": "Warning",
+      "message": "Event date is after visit date",
+      "isValid": true
+    },
+    {
+      "fieldId": "bmi",
+      "severity": "Info",
+      "message": "Calculated value: 26.78",
+      "isValid": true
+    }
+  ],
+  "errors": []
+}
