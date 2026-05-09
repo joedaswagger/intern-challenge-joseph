@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using FormValidationEngine.Core.Models;
+using FormValidationEngine.Core.Validation;
 using Newtonsoft.Json;
 
 namespace FormValidationEngine.App
@@ -28,11 +29,9 @@ namespace FormValidationEngine.App
             // Given a form definition and a submission, produce a ValidationReport.
             // The report should be serialized as JSON and written to stdout.
 
-            var report = new ValidationReport
-            {
-                SubmissionId = submission.SubmissionId,
-                FormId = formDefinition.FormId
-            };
+            var generator = new ValidationReportGenerator();
+
+            var report = generator.generate(formDefinition, submission);
 
             var output = JsonConvert.SerializeObject(report, Formatting.Indented);
             Console.WriteLine(output);
