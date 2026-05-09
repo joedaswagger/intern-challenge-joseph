@@ -11,7 +11,7 @@ namespace FormValidationEngine.Core.Validation
         {
             DependencyResolver resolver = new DependencyResolver();
 
-            DependencyResults dependencyResults = (DependencyResults)resolver.Resolve(formDefinition.Fields);
+            DependencyResults dependencyResults = resolver.Resolve(formDefinition.Fields);
             
 
             var report = new ValidationReport

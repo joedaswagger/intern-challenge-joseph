@@ -28,7 +28,7 @@ namespace FormValidationEngine.Core.Validation
         }
 
 
-        public Results Resolve(List<FieldDefinition> fieldDefinitions)
+        public DependencyResults Resolve(List<FieldDefinition> fieldDefinitions)
         {
 
             foreach (var fieldDefinition in fieldDefinitions) //Algorithm for building (O(n + m), where n is the total number of entries and m is the number of dependencies) 
@@ -47,12 +47,12 @@ namespace FormValidationEngine.Core.Validation
                 var check = new DependencyCheck();
 
                 var analysis = check.Analyze(_dependencyGraph);
-                Results result = new DependencyResults(true, new List<string>(), analysis);
+                DependencyResults result = new DependencyResults(true, new List<string>(), analysis);
                 return result;
             }
 
             catch (Exception e) {
-                Results result = new DependencyResults(false, new List<string>() {e.Message}, new List<string>());
+                DependencyResults result = new DependencyResults(false, new List<string>() {e.Message}, new List<string>());
                 return result;
             }
 
