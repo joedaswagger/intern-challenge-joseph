@@ -1,72 +1,13 @@
 ﻿using FormValidationEngine.Core.Exceptions;
-using FormValidationEngine.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
-namespace FormValidationEngine.Core.Validation
+namespace FormValidationEngine.Core.Validation.Dependencies
 {
-    public class DependencyResolver
+    public class DependencyCheck : IDependencyCheck
     {
-        private Dictionary<string, HashSet<string>> _dependencyGraph = new Dictionary<string, HashSet<string>>();
-
-
-        private void AddNode(string key) //Creates empty nodes of IDs to be later filled in if required
-        {
-            if (!_dependencyGraph.ContainsKey(key))
-            {
-                _dependencyGraph[key] = new HashSet<string>();
-            }
-        }
-
-        private void AddDependency(string key, string val) //Creates a dependency between two IDs
-        {
-            AddNode(key);
-            AddNode(val);
-
-            _dependencyGraph[key].Add(val);
-        }
-
-
-        public DependencyResults Resolve(List<FieldDefinition> fieldDefinitions)
-        {
-
-            foreach (var fieldDefinition in fieldDefinitions) //Algorithm for building (O(n + m), where n is the total number of entries and m is the number of dependencies) 
-            {
-                var currentId = fieldDefinition.Id;
-                var dependsOn = fieldDefinition.DependsOn;
-                AddNode(currentId);
-
-                foreach (var dependency in dependsOn)
-                {
-                    AddDependency(currentId, dependency);
-                }
-            }
-
-            try { //Validate whether the graph has circular dependencies or not, if it does, handle CircularDependencyException
-                var check = new DependencyCheck();
-
-                var analysis = check.Analyze(_dependencyGraph);
-                DependencyResults result = new DependencyResults(true, new List<string>(), analysis);
-                return result;
-            }
-
-            catch (Exception e) {
-                DependencyResults result = new DependencyResults(false, new List<string>() {e.Message}, new List<string>());
-                return result;
-            }
-
-
-        }
-
-    }
-
-
-    }
-
-    public class DependencyCheck
-    {
-
         private Stack<string> _path = new Stack<string>();
 
         private List<string> _topologicalOrder = new List<string>();
@@ -94,6 +35,7 @@ namespace FormValidationEngine.Core.Validation
 
             return _topologicalOrder;
         }
+
         private List<string> Visit(string node, Dictionary<string, HashSet<string>> graph, Dictionary<string, VisitState> states) //DFS performed recursively
         {
             states[node] = VisitState.Visiting; //set node being evaluated as visiting
@@ -142,4 +84,4 @@ namespace FormValidationEngine.Core.Validation
         Visiting,
         Visited
     }
-
+}

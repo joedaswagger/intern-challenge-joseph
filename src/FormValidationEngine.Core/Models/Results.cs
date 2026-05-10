@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace FormValidationEngine.Core.Validation
+namespace FormValidationEngine.Core.Models
 {
     public class Results //Universal Results class (every form of validation will be based off this class)
     {
