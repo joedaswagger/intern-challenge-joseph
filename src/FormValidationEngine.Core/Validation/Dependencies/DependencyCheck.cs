@@ -11,6 +11,8 @@ namespace FormValidationEngine.Core.Validation.Dependencies
         private Stack<string> _path = new Stack<string>();
 
         private List<string> _topologicalOrder = new List<string>();
+
+        private List<string> _missingDependencies = new List<string>();
         public List<string> Analyze(Dictionary<string, HashSet<string>> graph)
         {
             var states = new Dictionary<string, VisitState>();
@@ -33,7 +35,12 @@ namespace FormValidationEngine.Core.Validation.Dependencies
                 }
             }
 
-            return _topologicalOrder;
+            if (_missingDependencies.Any()) //If one or more missing dependencies have been found in the cycle, throw an exception with the list of missing dependencies
+            {
+                throw new Exceptions.MissingFieldException(_missingDependencies);
+            }
+
+            return _topologicalOrder; //Upon success, return topological order
         }
 
         private List<string> Visit(string node, Dictionary<string, HashSet<string>> graph, Dictionary<string, VisitState> states) //DFS performed recursively
@@ -41,10 +48,12 @@ namespace FormValidationEngine.Core.Validation.Dependencies
             states[node] = VisitState.Visiting; //set node being evaluated as visiting
             _path.Push(node);
 
+
             foreach (var dependency in graph[node])
             {
-                if (!states.ContainsKey(dependency)) //Missing dependency (Do an exception handling for this later maybe?)
-                {
+                if (!states.ContainsKey(dependency)) //For misisng dependencies
+                {   if(!_missingDependencies.Contains(dependency))
+                        _missingDependencies.Add(dependency);
                     continue;
                 }
 
@@ -76,6 +85,7 @@ namespace FormValidationEngine.Core.Validation.Dependencies
 
             return null;
         }
+
     }
 
     public enum VisitState

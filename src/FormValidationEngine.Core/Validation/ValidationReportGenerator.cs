@@ -3,6 +3,7 @@ using FormValidationEngine.Core.Validation.Dependencies;
 using FormValidationEngine.Core.Validation.Fields;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace FormValidationEngine.Core.Validation
@@ -18,6 +19,8 @@ namespace FormValidationEngine.Core.Validation
             var validators = new List<IFieldValidation>
             { new RequiredFieldValidation(),
                 new TypeValidation(),
+                new ConstraintValidation(),
+                new CalculatedFieldValidation(),
             };
             FieldValidationOrchestrator fieldValidation = new FieldValidationOrchestrator(validators);
 
@@ -28,10 +31,10 @@ namespace FormValidationEngine.Core.Validation
             {
                 SubmissionId = formSubmission.SubmissionId,
                 FormId = formDefinition.FormId,
-                IsValid = dependencyResults.success && fieldResults.success,
+                IsValid = dependencyResults.success && fieldResults.success, //Both have to succeed for a valid form
                 ExecutionOrder = dependencyResults.executionOrder,
                 Results = fieldResults.fields,
-                Errors = dependencyResults.errors,
+                Errors = dependencyResults.errors.Any() ? dependencyResults.errors : fieldResults.errors, //If there are dependency errors, put them first since they're breaking the system first, otherwise put field errors
             };
             
             

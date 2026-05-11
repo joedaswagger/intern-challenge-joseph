@@ -13,7 +13,7 @@ namespace FormValidationEngine.Core.Validation.Dependencies
         private readonly IDependencyGraph _graph;
         private readonly IDependencyCheck _check;
 
-        public DependencyResolver() : this(new DependencyGraph(), new DependencyCheck()) //Default constructor
+        public DependencyResolver() : this(new DependencyGraph(), new DependencyCheck()) //Default constructor, since we don't have any graphs or checks to give from the orchestrator
         {
         }
 
@@ -38,7 +38,7 @@ namespace FormValidationEngine.Core.Validation.Dependencies
             }
 
             try
-            { //Validate whether the graph has circular dependencies or not, if it does, handle CircularDependencyException
+            { //Validate whether the graph has circular dependencies/missing dependencies or not, if it does, handle it
 
                 var analysis = _check.Analyze(_graph.GetDependencyGraph());
                 return new DependencyResults(true, new List<string>(), analysis);

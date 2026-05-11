@@ -18,14 +18,25 @@ namespace FormValidationEngine.Core.Validation.Fields
             };
         }
 
-        public static FieldValidationResult Valid(FieldDefinition fieldDefinition)
+        public static FieldValidationResult Valid(FieldDefinition fieldDefinition, string message)
         {
             return new FieldValidationResult
             {
                 FieldId = fieldDefinition.Id,
                 IsValid = true,
-                Severity = ValidationSeverity.Error,
-                Message = "Valid"
+                Severity = ValidationSeverity.Info,
+                Message = message
+            };
+        }
+
+        public static FieldValidationResult Warning(FieldDefinition fieldDefinition, string message)
+        {
+            return new FieldValidationResult
+            {
+                FieldId = fieldDefinition.Id,
+                IsValid = true,
+                Severity = ValidationSeverity.Warning,
+                Message = message
             };
         }
     }

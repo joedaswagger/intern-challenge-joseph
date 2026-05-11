@@ -13,52 +13,54 @@ namespace FormValidationEngine.Core.Validation.Fields
             /*
              Don't like this many if statements but can't seem to think of a better way
              */
-            var value = data[fieldDefinition.Id];
-            if (fieldDefinition.Type == FieldType.Text && string.IsNullOrWhiteSpace(value))
+            if (data.ContainsKey(fieldDefinition.Id))
             {
-                return ResultFactory.Invalid(fieldDefinition, $"{fieldDefinition.Label} cannot be empty.");
-
-                    
-            }
-            else if (fieldDefinition.Type == FieldType.Number)
-            {
-                double number;
-                if (!double.TryParse(value, out number))
+                var value = data[fieldDefinition.Id];
+                if (fieldDefinition.Type == FieldType.Text && string.IsNullOrWhiteSpace(value))
                 {
-                    return ResultFactory.Invalid(fieldDefinition, $"{fieldDefinition.Label} must be a valid number.");
-                        
+                    return ResultFactory.Invalid(fieldDefinition, $"{fieldDefinition.Label} cannot be empty.");
+
+
+                }
+                if (fieldDefinition.Type == FieldType.Number)
+                {
+                    double number;
+                    if (!double.TryParse(value, out number))
+                    {
+                        return ResultFactory.Invalid(fieldDefinition, $"{fieldDefinition.Label} must be a valid number.");
+
+                    }
+                }
+
+                if (fieldDefinition.Type == FieldType.Date)
+                {
+                    DateTime date;
+                    if (!DateTime.TryParse(value, out date))
+                    {
+                        return ResultFactory.Invalid(fieldDefinition, $"{fieldDefinition.Label} must be a valid date.");
+
+                    }
+                }
+                if (fieldDefinition.Type == FieldType.Boolean)
+                {
+                    bool boolean;
+                    if (!bool.TryParse(value, out boolean))
+                    {
+                        return ResultFactory.Invalid(fieldDefinition, $"{fieldDefinition.Label} must be a valid boolean (true/false).");
+                    }
+                }
+                if (fieldDefinition.Type == FieldType.Choice)
+                {
+                    if (!(value == "Yes" || value == "No"))
+                    {
+                        return ResultFactory.Invalid(fieldDefinition, $"{fieldDefinition.Label} must be one of the following choices: {string.Join(", ", fieldDefinition.Constraints)}.");
+
+                    }
                 }
             }
 
-            else if (fieldDefinition.Type == FieldType.Date)
-            {
-                DateTime date;
-                if (!DateTime.TryParse(value, out date))
-                {
-                    return ResultFactory.Invalid(fieldDefinition, $"{fieldDefinition.Label} must be a valid date.");
-                        
-                }
-            }
-            else if (fieldDefinition.Type == FieldType.Boolean)
-            {
-                bool boolean;
-                if (!bool.TryParse(value, out boolean))
-                {
-                    return ResultFactory.Invalid(fieldDefinition, $"{fieldDefinition.Label} must be a valid boolean (true/false).");
-                }
-            }
-            else if (fieldDefinition.Type == FieldType.Choice)
-            {
-                if (!(value == "Yes" || value == "No"))
-                {
-                    return ResultFactory.Invalid(fieldDefinition, $"{fieldDefinition.Label} must be one of the following choices: {string.Join(", ", fieldDefinition.Constraints)}.");
 
-                }
-
-
-            }
-
-            return ResultFactory.Valid(fieldDefinition); // If all checks pass, return valid
+            return ResultFactory.Valid(fieldDefinition, "Valid"); // If all checks pass, return valid
         }
     }
 }

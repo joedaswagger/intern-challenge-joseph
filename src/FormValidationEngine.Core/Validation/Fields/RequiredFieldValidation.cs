@@ -20,7 +20,7 @@ namespace FormValidationEngine.Core.Validation.Fields
                 return ResultFactory.Invalid(fieldDefinition, "Field is required but not present in the submission");
 
 
-            return ResultFactory.Valid(fieldDefinition); //Default
+            return ResultFactory.Valid(fieldDefinition, "Valid"); //Default
         }
 
 
