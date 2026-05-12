@@ -1,5 +1,7 @@
 ﻿using FormValidationEngine.Core.Models;
 using FormValidationEngine.Core.Validation.Dependencies;
+using FormValidationEngine.Core.Validation.Logging;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlTypes;
@@ -14,11 +16,13 @@ namespace FormValidationEngine.Core.Validation.Fields
     {
         private List<FieldValidationResult> results = new List<FieldValidationResult>();
         private readonly IEnumerable<IFieldValidation> _validators;
-        private readonly List<string> _errorLog = new List<string>();
+        private readonly List<string> _errorList = new List<string>();
+        private readonly ILogging _logger;
 
-        public FieldValidationOrchestrator(IEnumerable<IFieldValidation> validators)
+        public FieldValidationOrchestrator(IEnumerable<IFieldValidation> validators, ILogging logger)
         {
             _validators = validators;
+            _logger = logger;
         }
 
 
@@ -31,6 +35,7 @@ namespace FormValidationEngine.Core.Validation.Fields
             {
 
                 FieldValidationResult result = new FieldValidationResult();
+                _logger.Info($"Validating field {fieldDefinition.Id} with type {fieldDefinition.Type}...");
 
                 foreach (var validator in _validators)
                 {
@@ -42,23 +47,26 @@ namespace FormValidationEngine.Core.Validation.Fields
                         }
                         var validationResult = validator.Validate(fieldDefinition, formSubmission.Data);
                         if (!validationResult.IsValid)
-                        {
+                        {   
+                            _logger.Error($"Validation failed for field {fieldDefinition.Id} with validator {validator.GetType().Name}: {validationResult.Message}");
                             result = validationResult;
+                            success = false;
                             break; // Break if one validator fails
                         }
                         else
                         {
                             result = validationResult;
                             if (result.Severity == ValidationSeverity.Warning) // Break if it's a warning
-                            {
+                            {   
+                                _logger.Warning($"Validation warning for field {fieldDefinition.Id} with validator {validator.GetType().Name}: {validationResult.Message}");
                                 break;
                             }
                         }
-
+                        _logger.Info($"Validation succeeded for field {fieldDefinition.Id} with validator {validator.GetType().Name}");
                     }
                     catch (Exception e) //If missing field or any other error occurs during validation, log the error and continue with the next validator
                     {
-                        _errorLog.Add(e.Message);
+                        _errorList.Add(e.Message);
                         success = false;
                         continue;
                     }
@@ -68,7 +76,7 @@ namespace FormValidationEngine.Core.Validation.Fields
 
             }
 
-            return new FieldResults(success, _errorLog, results);
+            return new FieldResults(success, _errorList, results);
         }
 
 
