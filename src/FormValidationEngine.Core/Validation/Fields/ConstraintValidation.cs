@@ -7,9 +7,14 @@ namespace FormValidationEngine.Core.Validation.Fields
 {
     public class ConstraintValidation : IFieldValidation
     {
-        public FieldValidationResult validate(FieldDefinition fieldDefinition, Dictionary<string, string> data)
+        public bool CanValidate(FieldDefinition fieldDefinition)
         {
-            if(fieldDefinition.Constraints != null && data.ContainsKey(fieldDefinition.Id))
+            return true; // All can validate, assuming that all fields can have constraints
+        }
+
+        public FieldValidationResult Validate(FieldDefinition fieldDefinition, Dictionary<string, string> data)
+        {
+            if(fieldDefinition.Constraints != null)
             {
 
                 //MinLength/MaxLength checks

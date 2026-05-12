@@ -5,6 +5,6 @@ namespace FormValidationEngine.Core.Validation
 {
     public interface IDependencyCheck
     {
-        List<string> Analyze(Dictionary<string, HashSet<string>> graph);
+        List<string> Analyze(IReadOnlyDictionary<string, HashSet<string>> graph);
     }
 }

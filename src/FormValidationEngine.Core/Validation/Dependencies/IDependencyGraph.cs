@@ -6,6 +6,6 @@ namespace FormValidationEngine.Core.Validation.Dependencies
     {
         void AddNode(string key);
         void AddDependency(string key, string value);
-        Dictionary<string, HashSet<string>> GetDependencyGraph();
+        IReadOnlyDictionary<string, HashSet<string>> GetDependencyGraph();
     }
 }

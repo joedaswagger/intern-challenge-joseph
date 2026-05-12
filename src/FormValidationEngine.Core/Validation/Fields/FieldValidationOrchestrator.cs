@@ -36,7 +36,11 @@ namespace FormValidationEngine.Core.Validation.Fields
                 {
                     try
                     {
-                        var validationResult = validator.validate(fieldDefinition, formSubmission.Data);
+                        if (!validator.CanValidate(fieldDefinition))
+                        {
+                            continue; // Skip if the validator cannot validate this field
+                        }
+                        var validationResult = validator.Validate(fieldDefinition, formSubmission.Data);
                         if (!validationResult.IsValid)
                         {
                             result = validationResult;
@@ -55,7 +59,7 @@ namespace FormValidationEngine.Core.Validation.Fields
                     catch (Exception e) //If missing field or any other error occurs during validation, log the error and continue with the next validator
                     {
                         _errorLog.Add(e.Message);
-
+                        success = false;
                         continue;
                     }
 

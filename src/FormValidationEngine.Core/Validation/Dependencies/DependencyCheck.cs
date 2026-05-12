@@ -11,9 +11,7 @@ namespace FormValidationEngine.Core.Validation.Dependencies
         private Stack<string> _path = new Stack<string>();
 
         private List<string> _topologicalOrder = new List<string>();
-
-        private List<string> _missingDependencies = new List<string>();
-        public List<string> Analyze(Dictionary<string, HashSet<string>> graph)
+        public List<string> Analyze(IReadOnlyDictionary<string, HashSet<string>> graph)
         {
             var states = new Dictionary<string, VisitState>();
 
@@ -24,7 +22,7 @@ namespace FormValidationEngine.Core.Validation.Dependencies
 
             foreach (var node in graph.Keys)
             {
-                if (states[node] == VisitState.Unvisited) //for all unvisited nodes, check if you can cycle back to it
+                if (states[node] == VisitState.Unvisited) //for all unvisited nodes, check if you can cycle back to it, while calculating the topological order at the same time
                 {
                     var cycle = Visit(node, graph, states);
 
@@ -35,28 +33,16 @@ namespace FormValidationEngine.Core.Validation.Dependencies
                 }
             }
 
-            if (_missingDependencies.Any()) //If one or more missing dependencies have been found in the cycle, throw an exception with the list of missing dependencies
-            {
-                throw new Exceptions.MissingFieldException(_missingDependencies);
-            }
-
             return _topologicalOrder; //Upon success, return topological order
         }
 
-        private List<string> Visit(string node, Dictionary<string, HashSet<string>> graph, Dictionary<string, VisitState> states) //DFS performed recursively
+        private List<string> Visit(string node, IReadOnlyDictionary<string, HashSet<string>> graph, Dictionary<string, VisitState> states) //DFS performed recursively
         {
             states[node] = VisitState.Visiting; //set node being evaluated as visiting
             _path.Push(node);
 
-
             foreach (var dependency in graph[node])
             {
-                if (!states.ContainsKey(dependency)) //For misisng dependencies
-                {   if(!_missingDependencies.Contains(dependency))
-                        _missingDependencies.Add(dependency);
-                    continue;
-                }
-
                 if (states[dependency] == VisitState.Visiting) //If we came back to a node we're still evaluating, it's circular
                 {
                     var cycle = _path

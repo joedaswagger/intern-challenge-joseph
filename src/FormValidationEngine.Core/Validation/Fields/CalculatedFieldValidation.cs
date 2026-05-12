@@ -11,14 +11,20 @@ namespace FormValidationEngine.Core.Validation.Fields
 {
     public class CalculatedFieldValidation : IFieldValidation
     {
-
-        private List<string> _missingDependencies = new List<string>();
-        public FieldValidationResult validate(FieldDefinition fieldDefinition, Dictionary<string, string> data)
+        public bool CanValidate(FieldDefinition fieldDefinition)
         {
-            if(fieldDefinition.Type != FieldType.Calculated)
+            if(fieldDefinition.Type == FieldType.Calculated) // This validation is only for calculated fields
             {
-                return ResultFactory.Valid(fieldDefinition, "Valid"); // Default for N/A field types, as this validation is only for calculated field.
+                return true;
             }
+            else
+            {
+                return false;
+            }
+        }
+        private List<string> _missingDependencies = new List<string>();
+        public FieldValidationResult Validate(FieldDefinition fieldDefinition, Dictionary<string, string> data)
+        {
 
             var formula = fieldDefinition.Constraints?.Formula;
             var dependencies = ExtractDependencies(formula);
@@ -91,5 +97,7 @@ namespace FormValidationEngine.Core.Validation.Fields
 
             return result;
         }
+
+        
     }
 }

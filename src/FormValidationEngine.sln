@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FormValidationEngine.Core",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FormValidationEngine.App", "FormValidationEngine.App\FormValidationEngine.App.csproj", "{0DF198F7-318E-499D-B4CF-DDAB0433F07F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FormValidationEngine.Tests", "FormValidationEngine.Tests\FormValidationEngine.Tests.csproj", "{67304A68-33A6-4E91-8D68-7BB2381AD78E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,6 +43,18 @@ Global
 		{0DF198F7-318E-499D-B4CF-DDAB0433F07F}.Release|x64.Build.0 = Release|Any CPU
 		{0DF198F7-318E-499D-B4CF-DDAB0433F07F}.Release|x86.ActiveCfg = Release|Any CPU
 		{0DF198F7-318E-499D-B4CF-DDAB0433F07F}.Release|x86.Build.0 = Release|Any CPU
+		{67304A68-33A6-4E91-8D68-7BB2381AD78E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{67304A68-33A6-4E91-8D68-7BB2381AD78E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{67304A68-33A6-4E91-8D68-7BB2381AD78E}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{67304A68-33A6-4E91-8D68-7BB2381AD78E}.Debug|x64.Build.0 = Debug|Any CPU
+		{67304A68-33A6-4E91-8D68-7BB2381AD78E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{67304A68-33A6-4E91-8D68-7BB2381AD78E}.Debug|x86.Build.0 = Debug|Any CPU
+		{67304A68-33A6-4E91-8D68-7BB2381AD78E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{67304A68-33A6-4E91-8D68-7BB2381AD78E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{67304A68-33A6-4E91-8D68-7BB2381AD78E}.Release|x64.ActiveCfg = Release|Any CPU
+		{67304A68-33A6-4E91-8D68-7BB2381AD78E}.Release|x64.Build.0 = Release|Any CPU
+		{67304A68-33A6-4E91-8D68-7BB2381AD78E}.Release|x86.ActiveCfg = Release|Any CPU
+		{67304A68-33A6-4E91-8D68-7BB2381AD78E}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

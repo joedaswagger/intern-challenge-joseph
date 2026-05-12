@@ -6,7 +6,7 @@ namespace FormValidationEngine.Core.Validation.Dependencies
 {
     public class DependencyGraph : IDependencyGraph
     {
-        public readonly Dictionary<string, HashSet<string>> _dependencyGraph = new Dictionary<string, HashSet<string>>();
+        private readonly Dictionary<string, HashSet<string>> _dependencyGraph = new Dictionary<string, HashSet<string>>();
 
 
         public void AddNode(string key) //Creates empty nodes of IDs to be later filled in if required
@@ -17,7 +17,7 @@ namespace FormValidationEngine.Core.Validation.Dependencies
             }
         }
 
-        public Dictionary<string, HashSet<string>> GetDependencyGraph()
+        public IReadOnlyDictionary<string, HashSet<string>> GetDependencyGraph()
         {
             return _dependencyGraph;
         }

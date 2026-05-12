@@ -7,7 +7,12 @@ namespace FormValidationEngine.Core.Validation.Fields
 {
     public class RequiredFieldValidation : IFieldValidation
     {
-        public FieldValidationResult validate(FieldDefinition fieldDefinition, Dictionary<string, string> data) //Two cases where validation fails: 1) The field is required but not present in the submission, 2) The field has a conditional requirement that is not met
+        public bool CanValidate(FieldDefinition fieldDefinition)
+        {
+            return true;
+        }
+
+        public FieldValidationResult Validate(FieldDefinition fieldDefinition, Dictionary<string, string> data) //Two cases where validation fails: 1) The field is required but not present in the submission, 2) The field has a conditional requirement that is not met
         {
             
             if (fieldDefinition.ConditionalRequirement != null && !data.ContainsKey(fieldDefinition.ConditionalRequirement.FieldId))
@@ -16,7 +21,7 @@ namespace FormValidationEngine.Core.Validation.Fields
 
             }
 
-            else if (!data.ContainsKey(fieldDefinition.Id) && fieldDefinition.Required) //If the field is not present in the submission but it's marked as required
+            if (!data.ContainsKey(fieldDefinition.Id) && fieldDefinition.Required) //If the field is not present in the submission but it's marked as required
                 return ResultFactory.Invalid(fieldDefinition, "Field is required but not present in the submission");
 
 
