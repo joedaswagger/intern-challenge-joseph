@@ -1,0 +1,46 @@
+Readme on architectural decisions:
+
+
+I made a "master" orchestrator file (ValidationReportGenerator) that branches off to two other orchestrators: one for dependency validation and the other for field validation. 
+All this file does is calling the two validations and running them and returning the report based on their results. This ensures that only one call is made in Program.cs
+
+Concerning how I undertook dependency validation, I mainly used one function that performs depth-first-search. This function both recursively builds the topological sort and, if it exists, a cycle. 
+This allows me to avoid making one DFS for a topological sort and another for checking cycles.
+
+Both the dependency side and the field side follow the same general structure : Interfaces that are called on by classes to allow for testing and to ensure SOLID. 
+I made two dependency interfaces because we intend to do two completely different operations (build the graph and analyze it), whereas I only made one interface for fields because all fields want to validate, just that they're doing it differently 
+(they're already essentially ready for processing besides the calculated fields (hence why that specific validation has helper functions and the others (mostly) don't)).
+
+More on field validation, the interface has one validator function and one verification function. 
+While the first one is self-explanatory, I made the second one since I figured that each validation might not be needed to be run (for example, calculated fields don't exactly need to go through Type Validation, 
+since they have their own entire class dedicated to validating calculated fields). This not only saves on compute, but avoids messy situations that would output invalid information.
+
+All class variables are made private and readonly (within reason) to ensure encapsulation.
+
+Some of the validation has too many if statements for my liking (it looks ugly, I know), but I couldn't figure out a better way to do it and would be very much open for feedback on how to do so, since I'm avoiding changing any of the models that I've been given. 
+Tried my best to at the very least implement OCP with TypeValidation (used to be the best example of too many if statements) to clean it up. Strategy pattern was used on it to ensure OCP.
+
+The field validation orchestrator works differently from the dependency one in that it allows you to input a list of validators from the master orchestrator. 
+This means that every time you make a new validator, the only modification you have to do is add the new validator to the list for the field orchestrator to loop through. 
+This, combined with the interface architecture I have previously outlined, ensures that OCP is respected throughout the system. The same system is also implemented for type validation.
+
+I added a factory on the field side for results (valid, warning, invalid) to debloat the system and have cleaner code.
+
+For the calculated field validation, I decided to use an external dependency called NCalc instead of making my own algorithm. 
+There were no restrictions on whether I could use external dependencies or not and I thought that writing my own would introduce too much code complexity into the project, so I went for it. 
+Moreover, NCalc has its own exceptions, which fits nicely into how I handle exceptions.
+
+Concerning how I handle exceptions, I generally didn't make many of them (I only made MissingFieldException) simply due to the fact that this and the CircularDependencyException are the only errors that I consider to be system-breaking. 
+As such, those are the scenarios in which I'd stop execution entirely to display errors. However, if there might be a future need to add new exceptions, the way I implemented exception handling allows for the addition of new exceptions with minimal modification to the codebase. 
+All other errors are expected ones, such as improper input, and are handled by the validator itself.
+
+I made 2 new models: one for general results (used by dependency resolution) and another for field results that extends the general model to allow for field inputs to the JSON when returning field validation results.
+
+I wrote 2 unit tests that outline how tests for both dependencies and fields would work. Tests for dependencies have more manipulations involved, so I would use a constructor that would initialize a new graph on every test. 
+For field validations, I parameterize anything to do with field definitions and hardcode valid/invalid data. 
+These tests aren't meant to achieve perfect coverage neither are they absolutely comprehensive, but they are a general idea of how I'd approach them and my testing philosophy 
+(more general and sweeping for fields, more meticulous for the dependencies due to the different use cases).
+
+Final notes on field validation: you might see that I run small type validation code in some of the classes (example: DateTime.TryParse). 
+This is intentional to prevent coupling between all the validation classes. If I attempt to pass previous validations into the current validation being evaluated, SOLID could be violated. 
+Maybe there is a way to do so without violating SOLID or creating coupling, but unfortunately I couldn't think of anything.
